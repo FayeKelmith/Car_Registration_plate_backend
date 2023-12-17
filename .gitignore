@@ -1,0 +1,10 @@
+venv
+#gitingore scripts for a python/fastapi project
+
+#vscode
+.vscode
+*.code-workspace
+
+#pycache
+__pycache__
+*.py[cod]
