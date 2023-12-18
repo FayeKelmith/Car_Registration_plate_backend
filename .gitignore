@@ -1,4 +1,4 @@
-venv
+newvenv
 #gitingore scripts for a python/fastapi project
 
 #vscode
@@ -8,3 +8,10 @@ venv
 #pycache
 __pycache__
 *.py[cod]
+
+#custom
+best.pt
+yolov8n.pt
+videos
+plates
+runs
