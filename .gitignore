@@ -12,6 +12,7 @@ __pycache__
 #custom
 best.pt
 yolov8n.pt
-videos
 plates
 runs
+videos
+plate*
