@@ -41,20 +41,26 @@ dict_int_to_char = {'0': 'O',
 
 # LICENSE PLATE FORMAT VERIFICATION
 def license_complies_format(text):
-    # True if the license plate complies with the format, False otherwise.
-    if len(text) != 7:
-        return False
+    import string
 
-    if (text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()) and \
-       (text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()) and \
-       (text[2] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[2] in dict_char_to_int.keys()) and \
-       (text[3] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] or text[3] in dict_char_to_int.keys()) and \
-       (text[4] in string.ascii_uppercase or text[4] in dict_int_to_char.keys()) and \
-       (text[5] in string.ascii_uppercase or text[5] in dict_int_to_char.keys()) and \
-       (text[6] in string.ascii_uppercase or text[6] in dict_int_to_char.keys()):
-        return True
-    else:
-        return False
+def license_complies_format(text):
+    """Checks if a given license plate complies with Indian standard formats."""
+    # Check for standard format (XX YY 1234)
+    if len(text) == 7 and all(char.isalnum() for char in text):
+        if (text[:2].isupper() and text[2:4].isalnum() and text[4:].isupper()):
+            return True
+
+    # Check for format with category letter (XX Y1234)
+    if len(text) == 6 and all(char.isalnum() for char in text):
+        if (text[:2].isupper() and text[2].isalpha() and text[3:].isdigit()):
+            return True
+
+    # Check for BH-series format (XX YY 1234 AA)
+    if len(text) == 9 and all(char.isalnum() for char in text):
+        if (text.startswith("22 BH") and text[5:8].isdigit() and text[8:].isalpha()):
+            return True
+
+    return False
 # FORMAT LICENSE PLATE
 def format_license(text):
     license_plate_ = ''
@@ -132,8 +138,50 @@ def predict(image):
                 
     return {"Plate information": "no plate detected"}
 
-results = predict(image)
-print(results)
+# results = predict(image)
+# print(results)
+
+
+
+    """
+
+    #TODO:
+    
+    #1.Capture function:
+    
+    def capture_image():
+    # Initialize the PiCamera
+    with picamera.PiCamera() as camera:
+        # Capture an image into a stream
+        stream = io.BytesIO()
+        camera.capture(stream, format='jpeg')
+        stream.seek(0)
+
+        # Convert the stream to a NumPy array
+        nparr = np.frombuffer(stream.getvalue(), dtype=np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    return img
+    
+    #2. 
+    """
+@app.get("/")
+def root():
+    return {"Message": "Root"}
+
 @app.post("/predict")
-async def predict(image: UploadFile = File(...)):
-    return {"message": "Hello World"}
+async def predict():
+    #Capture an image from camera
+    #image = capture_image()
+    
+    prediction_results = predict(image)
+    
+    """
+    #TODO:
+    
+    1. Algorithm to process prediction results
+    2. Send message using message algorithm
+    
+    """
+    
+    return 

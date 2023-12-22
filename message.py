@@ -1,23 +1,26 @@
 import requests
+import os
 
-url = 'https://www.fast2sms.com/dev/bulkV2'
+def send_message(numbers):
+    url = 'https://www.fast2sms.com/dev/bulkV2'
 
-message = 'Apni gari hata bee chirkut .'
+    message = 'Just testing... sorry'
 
-numbers = '7828645552,7761878881'
 
-payload = {
-    'sender_id': 'TXTIND',
-    'message': message,
-    'route': 'q',
-    'language': 'english',
-    'numbers': numbers
-}
-headers = {
-    'authorization':'nkoh0KqbRguNyr2A8ea4CspcOziFEYXBMlV1QfxvjGZDw9ITStqb0ISkFTmhDPClvdGpAW3zHYufjner',
-    'Content-Type':'application/x-www-form-urlencoded'
-}
+    payload = {
+        'sender_id': 'TXTIND',
+        'message': message,
+        'route': 'q',
+        'language': 'english',
+        'numbers': numbers
+    }
+    headers = {
+        'authorization': os.getenv('FAST2SMS_API'),
+        'Content-Type':'application/x-www-form-urlencoded'
+    }
 
-response = requests.post(url, data=payload, headers=headers)
+    response = requests.post(url, data=payload, headers=headers)
+    return response.text
 
-print(response.text)
+# numbers = '7828645552,7761878881'
+# print(send_message(numbers))
