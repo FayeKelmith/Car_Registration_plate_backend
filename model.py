@@ -1,9 +1,7 @@
-from fastapi import FastAPI
 import cv2 as cv 
 from ultralytics import YOLO
 import easyocr
 
-app = FastAPI()
 
 #Model definition
 vehicle_model = YOLO('yolov8n.pt')
@@ -128,53 +126,7 @@ def prediction(image):
                     np_text, np_score = read_license_plate(plate_threshold)
                     #cv.imwrite('plate.jpg',plate_threshold)
                     if np_text is not None:
-                        return {"Plate information":[np_text, np_score]}
+                        return {"information":[np_text, np_score]}
                 
-    return {"Plate information": "no plate detected"}
+    return {"information": "no plate detected"}
 
-# results = predict(image)
-# print(results)
-
-
-
-    """
-
-    #TODO:
-    
-    #1.Capture function:
-    
-    def capture_image():
-    # Initialize the PiCamera
-    with picamera.PiCamera() as camera:
-        # Capture an image into a stream
-        stream = io.BytesIO()
-        camera.capture(stream, format='jpeg')
-        stream.seek(0)
-
-        # Convert the stream to a NumPy array
-        nparr = np.frombuffer(stream.getvalue(), dtype=np.uint8)
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    return img
-    
-    #2. 
-    """
-@app.get("/")
-def root():
-    return {"Message": "Root"}
-
-@app.post("/predict")
-async def predict():
-    #Capture an image from camera
-    #image = capture_image()
-    prediction_results = prediction(image)
-    
-    """
-    #TODO:
-    
-    1. Algorithm to process prediction results
-    2. Send message using message algorithm
-    
-    """
-    print(prediction_results)
-    return prediction_results

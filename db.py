@@ -22,20 +22,8 @@ def get_number(plate):
         return None
     
 
-#NOTE: This is just for testing purposes
-
-#Adding item to database
-# def add_item():
-#     try:
-#         data = supabase.table('vehicles').insert([{'owner': 'Swetank', 'contact': 7761878881,'plate':'SWETANK'}]).execute()
-#         print(data)
-#         return data
-#     except Exception as e:
-#         print("Error: ",e)
-#         return None
-
+#Changing the plate with the fine
 def fine(plate:str):
-    #update the value of the column charge by adding 1000 to the existing value
     try:
         #get the current value of the charge column
         response = supabase.table('vehicles').select('charge').eq('plate',plate).execute()
@@ -49,3 +37,15 @@ def fine(plate:str):
     except Exception as e:
         print("Error: ",e)
         return None
+
+#NOTE: This is just for testing purposes
+
+#Adding item to database
+# def add_item():
+#     try:
+#         data = supabase.table('vehicles').insert([{'owner': 'Swetank', 'contact': 7761878881,'plate':'SWETANK'}]).execute()
+#         print(data)
+#         return data
+#     except Exception as e:
+#         print("Error: ",e)
+#         return None
