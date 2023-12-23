@@ -1,18 +1,23 @@
 import requests
 import os
+from db import get_number
 
-def send_message(numbers):
+def send_message(vehicle):
     url = 'https://www.fast2sms.com/dev/bulkV2'
+    
+    messages = {
+   "warning": f"Please Mr/Mrs. {vehicle['owner']}, your vehicle with plate number {vehicle['plate']} has been detected in a no parking zone. Please move your vehicle immediately. Thank you.",
+   "penalty" : f"Please Mr/Mrs. {vehicle['owner']}, your vehicle with plate number {vehicle['plate']} has been detected in a no parking zone. You have been fined {vehicle['charge']}. Please move your vehicle immediately. Thank you."
+}
 
-    message = 'Just testing... sorry'
-
+    
 
     payload = {
         'sender_id': 'TXTIND',
-        'message': message,
-        'route': 'q',
+        'message': messages['penalty'] if vehicle['fine'] else messages['warning'],
+        'route': 'q', 
         'language': 'english',
-        'numbers': numbers
+        'numbers': vehicle['contact']
     }
     headers = {
         'authorization': os.getenv('FAST2SMS_API'),
@@ -22,5 +27,5 @@ def send_message(numbers):
     response = requests.post(url, data=payload, headers=headers)
     return response.text
 
-# numbers = '7828645552,7761878881'
-# print(send_message(numbers))
+vehicle = get_number('SWETANK')
+print(send_message(vehicle))

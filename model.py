@@ -1,8 +1,5 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI
 import cv2 as cv 
-import numpy as np
-import os
-import string
 from ultralytics import YOLO
 import easyocr
 
@@ -39,9 +36,6 @@ dict_int_to_char = {'0': 'O',
                     '6': 'G',
                     '5': 'S'}
 
-# LICENSE PLATE FORMAT VERIFICATION
-def license_complies_format(text):
-    import string
 
 def license_complies_format(text):
     """Checks if a given license plate complies with Indian standard formats."""
@@ -85,16 +79,16 @@ def read_license_plate(license_plate_crop):
 
          # verify that text is conform to a standard license plate
         if license_complies_format(text):
+            print("Valid")
             # bring text into the default license plate format
             return format_license(text), score
 
     return None, None
 
 
-def predict(image):
+def prediction(image):
     #Varibales:
     vehicles = [2,3,5,7]
-    results = {}
     
     detections = vehicle_model(image)[0]
     
@@ -131,8 +125,8 @@ def predict(image):
                     plate_gray = cv.cvtColor(plate, cv.COLOR_BGR2GRAY)
                     _,plate_threshold = cv.threshold(plate_gray, 64,255,cv.THRESH_BINARY_INV)
                     # testing the output of plate
-                    # cv.imwrite('plate.jpg',plate_gray)
                     np_text, np_score = read_license_plate(plate_threshold)
+                    #cv.imwrite('plate.jpg',plate_threshold)
                     if np_text is not None:
                         return {"Plate information":[np_text, np_score]}
                 
@@ -173,8 +167,7 @@ def root():
 async def predict():
     #Capture an image from camera
     #image = capture_image()
-    
-    prediction_results = predict(image)
+    prediction_results = prediction(image)
     
     """
     #TODO:
@@ -183,5 +176,5 @@ async def predict():
     2. Send message using message algorithm
     
     """
-    
-    return 
+    print(prediction_results)
+    return prediction_results
