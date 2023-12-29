@@ -1,23 +1,38 @@
-#NOTE: Control panel
-#TODO:
-import picamera
-import io
+from model import prediction
+from db import get_number
+from message import send_message
+#from capture import capture_image
+import time
+
+#to test without raspberry pi
 import cv2 as cv
-import numpy as np
-"""PLAN:
-    Run raspberrypi here with all control
-    """
 
-def capture_image():
-# Initialize the PiCamera
-    with picamera.PiCamera() as camera:
-        # Capture an image into a stream
-        stream = io.BytesIO()
-        camera.capture(stream, format='jpeg')
-        stream.seek(0)
+sleep_time = 60
+#NOTE: Capture image and send message every 4 minutes
 
-        # Convert the stream to a NumPy array
-        nparr = np.frombuffer(stream.getvalue(), dtype=np.uint8)
-        img = cv.imdecode(nparr, cv.IMREAD_COLOR)
-
-    return img
+while True:
+    #Capture image
+    image = cv.imread("videos/car.png")
+    #image = capture_image()
+    
+    #Detect vehicle
+    vehicle = prediction(image)  
+    #Check if vehicle is in database
+    if vehicle:
+        #Get the number from database
+        target = get_number(vehicle['information'][0])
+        
+        #Send message
+        try:
+            print("target",target)
+            send_message(target)
+            print("Message sent")
+        except Exception as e:
+            print("Number not found")
+        #Wait for 4 minutes
+        time.sleep(sleep_time)
+    else:
+        #Wait for 4 minutes
+        print("No vehicle detected")
+        time.sleep(sleep_time)
+    

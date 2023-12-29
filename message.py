@@ -3,6 +3,7 @@ import os
 from db import get_number
 
 def send_message(vehicle):
+    print("vehicle",vehicle)
     url = 'https://www.fast2sms.com/dev/bulkV2'
     
     messages = {
@@ -14,7 +15,7 @@ def send_message(vehicle):
 
     payload = {
         'sender_id': 'TXTIND',
-        'message': messages['penalty'] if vehicle['fine'] else messages['warning'],
+        'message': messages['penalty'] if vehicle['fined'] else messages['warning'],
         'route': 'q', 
         'language': 'english',
         'numbers': vehicle['contact']
@@ -26,6 +27,3 @@ def send_message(vehicle):
 
     response = requests.post(url, data=payload, headers=headers)
     return response.text
-
-vehicle = get_number('SWETANK')
-print(send_message(vehicle))

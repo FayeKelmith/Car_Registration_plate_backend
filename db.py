@@ -15,7 +15,7 @@ def get_number(plate):
         response = supabase.table('vehicles').select('*').eq("plate",plate).execute()
         data= response.data[0]
         print(data)
-        return {"contact":data['contact'],'owner':data['owner'], 'plate':data['plate'],'fine':data['fine'],'charge':data['charge']}
+        return {"contact":data['contact'],'owner':data['owner'], 'plate':data['plate'],'fined':data['fined'],'charge':data['charge']}
     
     except Exception as e:
         print("Error: ",e)

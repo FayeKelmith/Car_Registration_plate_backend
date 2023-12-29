@@ -38,6 +38,9 @@ dict_int_to_char = {'0': 'O',
 def license_complies_format(text):
     """Checks if a given license plate complies with Indian standard formats."""
     # Check for standard format (XX YY 1234)
+    if len(text) == 10 and all(char.isalnum() for char in text):
+        if (text[:2].isupper() and text[2:4].isupper() and text[4:].isdigit()):
+            return True
     if len(text) == 7 and all(char.isalnum() for char in text):
         if (text[:2].isupper() and text[2:4].isalnum() and text[4:].isupper()):
             return True
@@ -52,7 +55,8 @@ def license_complies_format(text):
         if (text.startswith("22 BH") and text[5:8].isdigit() and text[8:].isalpha()):
             return True
 
-    return False
+    #return False
+    return True
 # FORMAT LICENSE PLATE
 def format_license(text):
     license_plate_ = ''
@@ -79,7 +83,8 @@ def read_license_plate(license_plate_crop):
         if license_complies_format(text):
             print("Valid")
             # bring text into the default license plate format
-            return format_license(text), score
+            #return format_license(text), score
+            return text, score
 
     return None, None
 
@@ -128,5 +133,5 @@ def prediction(image):
                     if np_text is not None:
                         return {"information":[np_text, np_score]}
                 
-    return {"information": "no plate detected"}
+    return None, None
 
